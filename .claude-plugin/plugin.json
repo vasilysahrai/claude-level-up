@@ -1,0 +1,10 @@
+{
+  "name": "level-up",
+  "description": "Self-improving skill installer — tell Claude Code what to get better at, and parallel agents research, synthesize, and install a new skill for it.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Vasily Sahrai",
+    "email": "vssahrai@gmail.com"
+  },
+  "homepage": "https://github.com/vasilysahrai/claude-level-up"
+}

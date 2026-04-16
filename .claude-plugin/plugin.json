@@ -1,7 +1,7 @@
 {
-  "name": "level-up",
-  "description": "Self-improving skill installer — tell Claude Code what to get better at, and parallel agents research, synthesize, and install a new skill for it.",
-  "version": "0.1.0",
+  "name": "claude-level-up",
+  "description": "Parallel dev team for Claude Code. /team breaks tasks into subtasks and spawns 2-5 specialized agents (researcher, architect, builder, reviewer, designer) working simultaneously. Also discovers, evaluates, synthesizes, and installs new skills.",
+  "version": "0.2.0",
   "author": {
     "name": "Vasily Sahrai",
     "email": "vssahrai@gmail.com"

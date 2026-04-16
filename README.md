@@ -1,31 +1,55 @@
 # claude-level-up
 
-Teach Claude Code new tricks. It learns them itself.
+A dev team for Claude Code, not a solo engineer.
 
-Tell Claude what to get better at. It dispatches a team of parallel research agents, synthesizes what they find into a new skill, and installs it — so every future session benefits.
+`/team` breaks your task into subtasks and spawns 2-5 specialized agents in parallel — researcher, architect, builder, reviewer, designer — each working simultaneously. It also discovers and installs new skills so Claude gets permanently smarter.
 
-## How it works
+## Two modes
+
+### Task mode — parallel dev team
 
 ```
-You: /level-up reviewing SQL migrations for safety
+You: /team build a REST API for user auth
 
-Claude dispatches 3 agents in parallel:
-  +-----------------------+  +-------------------------+  +---------------------+
-  | Agent A               |  | Agent B                 |  | Agent C             |
-  | Hunts GitHub for      |  | Researches best         |  | Scans your local    |
-  | existing skills       |  | practices & pitfalls    |  | codebase for context|
-  +-----------------------+  +-------------------------+  +---------------------+
-              \                        |                        /
-               \                       |                       /
-                +----------------------+-----------------------+
-                |  Synthesize or install the best match        |
-                +----------------------------------------------+
-                                       |
-                                       v
-              ~/.claude/skills/sql-migration-review/SKILL.md
+Claude spawns a team:
+  +------------+  +------------+  +-----------+  +------------+
+  | Researcher |  | Architect  |  | Builder   |  | Reviewer   |
+  | Finds      |  | Designs    |  | Writes    |  | Checks for |
+  | existing   |  | routes,    |  | the code  |  | bugs,      |
+  | patterns   |  | schema,    |  |           |  | security,  |
+  | & prior art|  | interfaces |  |           |  | edge cases |
+  +------------+  +------------+  +-----------+  +------------+
+        \               \              /               /
+         +---------------+-----------+----------------+
+         |         Synthesize unified result           |
+         +---------------------------------------------+
 ```
 
-The installed skill auto-activates in future sessions whenever Claude detects a matching context.
+Each agent works in parallel. Results merge with a priority order: reviewer safety concerns > architect design > builder implementation, grounded by researcher findings.
+
+### Skill mode — Search, Evaluate, Synthesize, Install
+
+```
+You: /team get better at writing idiomatic rust
+
+  Phase 1: SEARCH
+  +------------------+  +------------------+  +----------------+
+  | Skill Hunter     |  | Domain Expert    |  | Local Scout    |
+  | GitHub, community|  | Best practices,  |  | Your codebase  |
+  | repos, web       |  | pitfalls, docs   |  | patterns       |
+  +------------------+  +------------------+  +----------------+
+
+  Phase 2: EVALUATE
+  Filter for relevance, quality, safety, specificity
+
+  Phase 3: SYNTHESIZE
+  Combine into a single focused SKILL.md
+
+  Phase 4: INSTALL
+  ~/.claude/skills/idiomatic-rust/SKILL.md
+```
+
+The installed skill auto-activates in every future session.
 
 ## Install
 
@@ -33,7 +57,7 @@ The installed skill auto-activates in future sessions whenever Claude detects a 
 
 ```bash
 git clone https://github.com/vasilysahrai/claude-level-up.git
-cp -r claude-level-up/skills/level-up ~/.claude/skills/level-up
+cp -r claude-level-up/skills/team ~/.claude/skills/team
 ```
 
 Then restart Claude Code or run `/reload-plugins`.
@@ -41,34 +65,40 @@ Then restart Claude Code or run `/reload-plugins`.
 ### Option B: One-liner
 
 ```bash
-mkdir -p ~/.claude/skills && git clone https://github.com/vasilysahrai/claude-level-up.git /tmp/claude-level-up && cp -r /tmp/claude-level-up/skills/level-up ~/.claude/skills/level-up && rm -rf /tmp/claude-level-up
+mkdir -p ~/.claude/skills && git clone https://github.com/vasilysahrai/claude-level-up.git /tmp/claude-level-up && cp -r /tmp/claude-level-up/skills/team ~/.claude/skills/team && rm -rf /tmp/claude-level-up
 ```
 
 ## Usage
 
+### Dev tasks
+
 ```
-/level-up writing idiomatic rust
-/level-up reviewing SQL migrations for safety
-/level-up "tailwind v4 conventions"
-/level-up debugging memory leaks in Node.js
+/team build a REST API for user auth
+/team refactor the payment module to use Stripe v3
+/team debug why websocket connections drop after 30s
+/team design a caching layer for the search endpoint
 ```
 
-Each invocation:
-1. Normalizes your request into a kebab-case slug
-2. Checks for existing skills to avoid duplicates
-3. Dispatches three research agents **in parallel**
-4. Installs the result to `~/.claude/skills/<slug>/SKILL.md`
+### Skill acquisition
 
-If an existing high-quality skill is found on GitHub, it installs that verbatim (with credit). Otherwise it synthesizes a new one from best practices and your local codebase context.
+```
+/team get better at writing idiomatic rust
+/team teach yourself SQL migration safety
+/team install a skill for tailwind v4 conventions
+/team level up at debugging memory leaks in Node.js
+```
 
-## What gets installed
+## Agent roles
 
-Each skill is a single `SKILL.md` file with:
-- **Frontmatter**: name, description (trigger phrases for auto-activation), version
-- **Body**: concrete, actionable guidance — not documentation, but instructions Claude follows when the skill activates
-- **References** (optional): cheat sheets or canonical examples in a `references/` subdirectory
+| Role | When spawned | Focus |
+|------|-------------|-------|
+| **Researcher** | Always | Prior art, docs, existing patterns in your codebase |
+| **Architect** | Design decisions, new systems, multi-file changes | Structure, interfaces, data flow, file layout |
+| **Builder** | Tasks that produce code | Implementation, following existing patterns |
+| **Reviewer** | Tasks that produce code | Bugs, security (OWASP), edge cases, style |
+| **Designer** | UI/UX tasks | Component hierarchy, layouts, interactions |
 
-Skills live in `~/.claude/skills/<slug>/` and persist across sessions.
+Minimum 2 agents. Maximum 5. The team scales to fit the task.
 
 ## Requirements
 

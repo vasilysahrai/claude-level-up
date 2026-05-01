@@ -114,3 +114,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 [MIT](LICENSE)
 
 ## Made by vasilysahrai, on GitHub
+## Please reach out to me for any errors or requests. Thank you!
